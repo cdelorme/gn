@@ -36,6 +36,8 @@ This should fulfill all of the requirements:
 - displays repositories in a relevant order with commit total
 - allows the user to enter a username and open the repository page
 
+_Github provides a stellar API, it's very well documented, and easy to use and make sense of.  This makes it a great choice for a quick application, and was the leading reason for choosing it for this project._
+
 
 ## notes
 
@@ -46,3 +48,4 @@ I've already had some experience using the github api; when I created my [dot-fi
 
 - [github api docs](https://developer.github.com/v3/)
 - [github api repositories](https://developer.github.com/v3/repos/)
+- [used some css for button decoration](http://www.webdesignerwall.com/demo/css-buttons.html)
