@@ -130,15 +130,20 @@
                         var ajax = function() {};
 
                         // define form capture
-                        function getUser() {
+                        function getUser(e) {
+
+                            // prevent form submission
+                            e.preventDefault();
+
+                            // begin ajax call to github
 
                         }
 
                         // attach for external execution
                         if (w.addEventListener) {
-                            // w.document.forms[0].addEventListener();
+                            w.document.forms[0].addEventListener('submit', getUser, false);
                         } else {
-                            // w.document.forms[0].attachEvent();
+                            w.document.forms[0].attachEvent('onsubmit', getUser);
                         }
 
                     })(window);
