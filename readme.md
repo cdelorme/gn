@@ -43,6 +43,22 @@ _Github provides a stellar API, it's very well documented, and easy to use and m
 
 I've already had some experience using the github api; when I created my [dot-files](https://github.com/cdelorme/dot-files) repo install script I added options to accept the username and password to run curl commands from bash that pull down the users keys as `~/.ssh/authorized_keys` and if the system is running OSX to grab a token for [homebrew](http://brew.sh/), as well as an option to generate a new key and automatically add it to github.
 
+Looking over the API, it appears that a request such as this one:
+
+    https://api.github.com/users/cdelorme/repos
+
+Will yield a JSON blob per project which has the following valuable resources:
+
+- name
+- html_url
+- updated_at
+- contributors_url
+
+I can display the list by `name` field.
+I can order them by the `updated_at` field.
+I can link to them with the `html_url` field.
+Using the `contributor_url` I can display a list of contributions per person.
+
 
 ## references
 
