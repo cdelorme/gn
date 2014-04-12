@@ -60,8 +60,30 @@ I can link to them with the `html_url` field.
 Using the `contributor_url` I can display a list of contributions per person.
 
 
+## operations design
+
+What I will need:
+
+- a form
+- an ajax handler
+- rendering logic
+
+_For IE8 support I may use `attachEvent` and `ActiveXObject`._
+
+Expected requests:
+
+- request repositories by supplied user
+- request contributions for that repository
+
+
+## interesting features
+
+While the webapp is a single-page application, the use of history pushState might allow me to do some pretty cool things.  If I have time I may play with this idea a little bit.  Combined with localStorage it should be possible to do some neat things.
+
+
 ## references
 
 - [github api docs](https://developer.github.com/v3/)
 - [github api repositories](https://developer.github.com/v3/repos/)
 - [used some css for button decoration](http://www.webdesignerwall.com/demo/css-buttons.html)
+- [localStorage wrapper for json](https://github.com/cdelorme/lscache)
