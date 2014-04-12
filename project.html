@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+    <head>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        <title>Casey DeLorme | Code Sample</title>
+
+        <style type='text/css'>
+
+            /* Poor mans reset (inefficient but simple) */
+            * {
+                margin: 0;
+                padding: 0;
+                text-decoration: none;
+                list-style: none;
+            }
+
+            /* default styling */
+            body {
+                width: 940px;
+                margin: 20px auto;
+                font-size: 14px;
+                font-family: helvetica, verdana;
+                color: #333;
+            }
+            h1 {
+                font-size: 22px;
+                font-weight: bolder;
+            }
+            h1, h2, h3 {
+                margin-bottom: 15px;
+            }
+            h4, p, form {
+                margin-bottom: 10px;
+            }
+
+            /* header styling */
+            header {
+                margin-bottom: 30px;
+                border-bottom: 1px groove #fee;
+            }
+            header form input[type='text'], header form button {
+                font-size: 16px;
+                padding: 8px 20px;
+                border: 1px solid #ccc;
+                -webkit-border-radius: 8px;
+                -moz-border-radius: 8px;
+                border-radius: 8px;
+            }
+            header form button {
+                color: #eee;
+                border: solid 1px #0076a3;
+                background: #0095cd;
+                background: -webkit-gradient(linear, left top, left bottom, from(#00adee), to(#0078a5));
+                background: -moz-linear-gradient(top,  #00adee,  #0078a5);
+                filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#00adee', endColorstr='#0078a5');
+            }
+            header form button:hover {
+                color: #fff;
+                background: #0076a3;
+                text-shadow: 0 1px 1px rgba(0,0,0,.3);
+                background: #007ead;
+                background: -webkit-gradient(linear, left top, left bottom, from(#0095cc), to(#00678e));
+                background: -moz-linear-gradient(top,  #0095cc,  #00678e);
+                filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0095cc', endColorstr='#00678e');
+            }
+            header form button:active {
+                color: #bbb;
+                background: -webkit-gradient(linear, left top, left bottom, from(#0078a5), to(#00adee));
+                background: -moz-linear-gradient(top,  #0078a5,  #00adee);
+                filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#0078a5', endColorstr='#00adee');
+            }
+
+            /* section (main) styling */
+            section {
+                margin: 40px 0;
+            }
+
+            /* article styling */
+            article {
+                margin-bottom: 10px;
+            }
+
+            /* footer styling */
+            footer {
+                margin-top: 40px;
+                text-align: center;
+                font-size: 11px;
+                font-style: italic;
+            }
+            footer section.scripts {
+                display: none;
+            }
+
+        </style>
+
+    </head>
+    <body>
+
+        <header>
+
+            <h1>Simple Github Interface</h1>
+
+            <p>Enter a username below to list repositories under that user in the order of most recent contributions.</p>
+
+            <form method='post'>
+                <input type='text' autofocus='autofocus' placeholder='username...' />
+                <button type='submit'>List Repositories</button>
+            </form>
+
+        </header>
+
+        <section></section>
+
+        <footer>
+
+            <p>This is a code demonstration page, all work is licensed under GPLv3 and was written by <a href='http://www.cdelorme.com'>Casey DeLorme</a>.</p>
+
+            <section class='scripts'>
+
+                <script type='text/javascript'>
+
+                    // namespace the javascript code
+                    (function(w) {
+
+                        // define github resources
+
+                        // define ajax service
+                        var ajax = function() {};
+
+                        // define form capture
+                        function getUser() {
+
+                        }
+
+                        // attach for external execution
+                        if (w.addEventListener) {
+                            // w.document.forms[0].addEventListener();
+                        } else {
+                            // w.document.forms[0].attachEvent();
+                        }
+
+                    })(window);
+
+                </script>
+
+            </section>
+
+        </footer>
+
+    </body>
+</html>
