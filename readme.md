@@ -75,10 +75,33 @@ Expected requests:
 - request repositories by supplied user
 - request contributions for that repository
 
+Operations:
 
-## interesting features
+- send request for users
+- capture & handle non-existent users (failed operation)
+- render list of repositories
+- send request for contributions (by repo)
+- render contributions list per user, with current user in bold
+
+_I may instead simply ignore failed requests for the time being, or handle them in the same method as rendering._
+
+
+## conclusions
+
+As I described in detail above, the requirements do not indicate a need for a full stack application, merely a client-side page that can communicate with an API.
+
+It can be run on your local machine, or through any web server.
+
+I also chose the write the code without using jQuery or other external libraries in order to demonstrate that I can do it without dependencies.  If I had chosen to use jQuery the code may have been a bit more reliable in a cross-browser context.
+
+Finally, I have only tested this page in google chrome, but I am confident it will work in most modern browsers.
+
+
+## possible feature additions
 
 While the webapp is a single-page application, the use of history pushState might allow me to do some pretty cool things.  If I have time I may play with this idea a little bit.  Combined with localStorage it should be possible to do some neat things.
+
+One area to consider is how to handle parallel asynchronous requests.  Whether to limit the number of requests to prevent getting blocked by github, or pull down contributions for every repository all at once and store them in localStorage.
 
 
 ## references
@@ -86,4 +109,4 @@ While the webapp is a single-page application, the use of history pushState migh
 - [github api docs](https://developer.github.com/v3/)
 - [github api repositories](https://developer.github.com/v3/repos/)
 - [used some css for button decoration](http://www.webdesignerwall.com/demo/css-buttons.html)
-- [localStorage wrapper for json](https://github.com/cdelorme/lscache)
+- [client-side json cache](https://github.com/cdelorme/lscache)
