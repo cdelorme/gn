@@ -111,7 +111,7 @@
 
         </header>
 
-        <section></section>
+        <section class='main'></section>
 
         <footer>
 
@@ -125,28 +125,120 @@
                     (function(w) {
 
                         // define github resources
+                        var github_url = 'https://api.github.com/';
 
-                        // define ajax service
-                        var ajax = function() {};
+                        // define ajax service container
+                        var Ajax = function(method, url, callback, context) {
 
-                        // define form capture
-                        function getUser(e) {
+                            // prepare request
+                            var request;
 
-                            // prevent form submission
-                            e.preventDefault();
+                            // create service
+                            if (w.XMLHttpRequest) {
+                                request = new w.XMLHttpRequest();
+                            } else if (w.ActiveXObject) {
+                                request = new w.ActiveXObject("Microsoft.XMLHTTP");
+                            }
 
-                            // begin ajax call to github
+                            // connect callback to request
+                            if (context) {
+                                if (w.addEventListener) {
+                                    request.addEventListener('readystatechange', callback.bind(context), false);
+                                } else if (w.attachEvent) {
+                                    request.attachEvent('onreadystatechange', callback.bind(context));
+                                }
+                            } else {
+                                if (w.addEventListener) {
+                                    request.addEventListener('readystatechange', callback, false);
+                                } else if (w.attachEvent) {
+                                    request.attachEvent('onreadystatechange', callback);
+                                }
+                            }
 
-                        }
+                            // set method & url (always async)
+                            request.open(method, url, true);
 
-                        // attach for external execution
-                        if (w.addEventListener) {
-                            w.document.forms[0].addEventListener('submit', getUser, false);
-                        } else {
-                            w.document.forms[0].attachEvent('onsubmit', getUser);
-                        }
+                            // run operation
+                            request.send();
+
+                        };
+
+                        // object to handle gn project methods
+                        var gn = function(username, context) {
+
+                            // store username
+                            this.username = username;
+
+                            // store the context
+                            this.context = context;
+
+                            /**
+                             * localstorage could be implemented to reduce ajax traffic
+                             */
+
+                             /**
+                              * empty out the context
+                              * this is the easiest way to write it
+                              * but generally I would use a recursive function to remove nodes
+                              */
+                             this.context.innerHTML = '';
+
+                             // render the username first into the context
+
+
+
+
+                            // run the first ajax operation
+
+                        };
+
+                        /**
+                         * define gn prototyped methods
+                         */
+
+                        // request user repositories
+                        gn.prototype.getUser = function() {};
+
+                        // render list of repositories (by user)
+                        gn.prototype.renderRepos = function() {};
+
+                        // request contributions (by repo)
+                        gn.prototype.getContributions = function() {};
+
+                        // render contributions (bold our user)
+                        gn.prototype.renderContributions = function() {};
+
+                        // attach gn to global space
+                        w.gn = gn;
 
                     })(window);
+
+                    function formHandler(e) {
+
+                        // prevent form submission
+                        if (e.preventDefault) e.preventDefault();
+
+                        // grab username
+                        var username = this.elements[0].value;
+
+                        // acquire section.main as context
+                        var context = document.getElementsByClassName('main')[0];
+
+                        // create new gn and begin operations
+                        if (username.length > 0) {
+                            var handler = new window.gn(username, context);
+                        }
+
+                        // legacy support (may not be useful anymore)
+                        return false;
+                    }
+
+                    // form handler
+                    if (window.addEventListener) {
+                        window.document.forms[0].addEventListener('submit', formHandler, false);
+                    } else {
+                        window.document.forms[0].attachEvent('onsubmit', formHandler);
+                    }
 
                 </script>
 
