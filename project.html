@@ -130,6 +130,10 @@
                         // define ajax service container
                         var Ajax = function(method, url, callback, context) {
 
+                            // store callback and context
+                            this.callback = callback;
+                            if (context) this.context = context;
+
                             // prepare request
                             var request;
 
@@ -140,19 +144,11 @@
                                 request = new w.ActiveXObject("Microsoft.XMLHTTP");
                             }
 
-                            // connect callback to request
-                            if (context) {
-                                if (w.addEventListener) {
-                                    request.addEventListener('readystatechange', callback.bind(context), false);
-                                } else if (w.attachEvent) {
-                                    request.attachEvent('onreadystatechange', callback.bind(context));
-                                }
-                            } else {
-                                if (w.addEventListener) {
-                                    request.addEventListener('readystatechange', callback, false);
-                                } else if (w.attachEvent) {
-                                    request.attachEvent('onreadystatechange', callback);
-                                }
+                            // connect internal callback handler to request (async runs through many times)
+                            if (w.addEventListener) {
+                                request.addEventListener('readystatechange', this.async.bind(this), false);
+                            } else if (w.attachEvent) {
+                                request.attachEvent('onreadystatechange', this.async.bind(this));
                             }
 
                             // set method & url (always async)
@@ -160,6 +156,32 @@
 
                             // run operation
                             request.send();
+
+                        };
+
+                        /**
+                         * prototype methods
+                         */
+                        Ajax.prototype.async = function(event) {
+
+                            // grab request
+                            var request = event.currentTarget;
+
+                            /**
+                             * other statuses could be handled here, such as 404
+                             */
+
+                            // check request status
+                            if (request.status === 200 && request.readyState === 4) {
+
+                                // run callback and supply it with data, and optionally with context
+                                if (this.context) {
+                                    this.callback.call(this.context, request.responseText);
+                                } else {
+                                    this.callback(request.responseText);
+                                }
+
+                            }
 
                         };
 
@@ -181,14 +203,15 @@
                               * this is the easiest way to write it
                               * but generally I would use a recursive function to remove nodes
                               */
-                             this.context.innerHTML = '';
+                            this.context.innerHTML = '';
 
-                             // render the username first into the context
-
-
-
+                            // render the username first into the context
+                            var user = w.document.createElement('h2');
+                            user.appendChild(w.document.createTextNode('github user: ' + this.username));
+                            this.context.appendChild(user);
 
                             // run the first ajax operation
+                            var request = new Ajax('GET', github_url + 'users/' + this.username + '/repos', this.renderRepos.bind(this), this);
 
                         };
 
@@ -196,23 +219,137 @@
                          * define gn prototyped methods
                          */
 
-                        // request user repositories
-                        gn.prototype.getUser = function() {};
-
                         // render list of repositories (by user)
-                        gn.prototype.renderRepos = function() {};
+                        gn.prototype.renderRepos = function(data) {
 
-                        // request contributions (by repo)
-                        gn.prototype.getContributions = function() {};
+                            // decode data as json array of repositories
+                            this.repositories = JSON.parse(data);
+
+                            // order repositories by updated_at
+                            this.repositories.sort(function(a, b) {
+                                var keyA = new Date(a.updated_at);
+                                var keyB = new Date(b.updated_at);
+                                if (keyA > keyB) return -1;
+                                if (keyA < keyB) return 1;
+                                return 0;
+                            });
+
+                            // create self reference
+                            var self = this;
+
+                            // grab count of repositories
+                            var count_repositories = this.repositories.length;
+
+                            // iterate and render each repository
+                            for (var i = 0; i < count_repositories; i++) {
+
+                                // create container /w click event
+                                var article = w.document.createElement('article');
+                                if (w.addEventListener) {
+                                    article.addEventListener('click', this.requestContributors.bind(this, this.repositories[i], article), false);
+                                } else if (w.attachEvent) {
+                                    article.attachEvent('onclick', this.requestContributors.bind(this, this.repositories[i], article));
+                                }
+
+                                // create repo link /w name
+                                var name = w.document.createElement('a');
+                                name.appendChild(w.document.createTextNode(this.repositories[i].name));
+                                name.setAttribute('href', this.repositories[i].html_url);
+                                article.appendChild(name);
+
+                                // add description
+                                var description = w.document.createElement('p');
+                                description.appendChild(w.document.createTextNode(this.repositories[i].description));
+                                article.appendChild(description);
+
+                                // append to context
+                                this.context.appendChild(article);
+
+                            }
+
+                        };
+
+                        // request contributors
+                        gn.prototype.requestContributors = function(repo, article) {
+
+                            // check to see whether we have already loaded contributors
+                            var contributors = article.getElementsByTagName('ul');
+                            if (contributors.length > 0) {
+
+                                // toggle display of the content
+                                if (contributors[0].style.display == "none") {
+                                    contributors[0].style.display = "block";
+                                } else {
+                                    contributors[0].style.display = "none";
+                                }
+
+                                // prevent the ajax request
+                                return false;
+
+                            }
+
+                            /**
+                             * If I were using localStorage I could probably run these
+                             * all up-front and have them on-hand, but I chose not to
+                             * for this short-term demo
+                             */
+
+                            // send an ajax request with the repositories `contributors_url`
+                            var request = new Ajax('GET', repo.contributors_url, this.renderContributions.bind(this, article), this);
+
+                        };
 
                         // render contributions (bold our user)
-                        gn.prototype.renderContributions = function() {};
+                        gn.prototype.renderContributions = function(article, data) {
+
+                            /**
+                             * Here is where we could add localStorage logic
+                             * to cache the results of contributors per repo
+                             * pre-emptivle with an expiration (so it does not grow stale)
+                             */
+
+                            // extract json
+                            var contributors = JSON.parse(data);
+
+                            // grab count
+                            var contributors_count = contributors.length;
+
+                            // create container
+                            var container = w.document.createElement('ul');
+
+                            // iterate contributors and append details to article
+                            for (var i = 0; i < contributors_count; i++) {
+
+                                // prepare contributor container
+                                var contributor = w.document.createElement('li');
+
+                                // append contributor name /w html link
+                                var name = w.document.createElement('a');
+                                name.appendChild(w.document.createTextNode(contributors[i].login));
+                                name.setAttribute('href', contributors[i].html_url);
+                                contributor.appendChild(name);
+
+                                // append contributions count
+                                var contributions = w.document.createElement('span');
+                                contributions.appendChild(w.document.createTextNode(contributors[i].contributions));
+                                contributor.appendChild(contributions);
+
+                                // append contributor to container
+                                container.appendChild(contributor);
+
+                            }
+
+                            // append container to article
+                            article.appendChild(container);
+
+                        };
 
                         // attach gn to global space
                         w.gn = gn;
 
                     })(window);
 
+                    // for the username form
                     function formHandler(e) {
 
                         // prevent form submission
