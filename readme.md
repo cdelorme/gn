@@ -22,8 +22,13 @@ The page will display:
 - username entry
 - repositories by user
     - ordered by most recent activity
-- commits per repository
-    - displays list of all contribitors /w username in bold
+- description
+
+Clicking it will:
+
+- load contributions per repository
+    - display the list of all usernames /w contribution info
+    - bold/highlight the current users contributions
 
 The user may:
 
@@ -52,6 +57,7 @@ Will yield a JSON blob per project which has the following valuable resources:
 - name
 - html_url
 - updated_at
+- description
 - contributors_url
 
 I can display the list by `name` field.
@@ -92,9 +98,13 @@ As I described in detail above, the requirements do not indicate a need for a fu
 
 It can be run on your local machine, or through any web server.
 
-I also chose the write the code without using jQuery or other external libraries in order to demonstrate that I can do it without dependencies.  If I had chosen to use jQuery the code may have been a bit more reliable in a cross-browser context.
+I also chose the write the code without using jQuery or other external libraries in order to demonstrate that I can do it without dependencies.  If I had chosen to use jQuery the code may have been a bit more reliable in a cross-browser context.  It also lacks animated interaction, so nothing slides or fades into or out of view.
+
+I also am aware that the code is not exactly efficient.  I do not have any cleanup handling happening, so if you search for a new user it incorrectly uses innerHTML to wipe out the context, which leaves DOM elements and attached events intact awaiting the browsers javascript garbage collection.  I did not have the time to spare to write a wrapper to track element context for events and recursive DOM removal.
 
 Finally, I have only tested this page in google chrome, but I am confident it will work in most modern browsers.
+
+I hope grading will be lenient, as I have not programmed javascript in roughly 8 months; since I started my current job.
 
 
 ## possible feature additions
