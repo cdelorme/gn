@@ -13,7 +13,6 @@
                 margin: 0;
                 padding: 0;
                 text-decoration: none;
-                list-style: none;
             }
 
             /* default styling */
@@ -33,6 +32,10 @@
             }
             h4, p, form {
                 margin-bottom: 10px;
+            }
+            ul {
+                list-style: disc;
+                margin-left: 45px;
             }
 
             /* header styling */
@@ -76,10 +79,44 @@
             section {
                 margin: 40px 0;
             }
+            section h2 {
+                font-size: 18px;
+                font-weight: bolder;
+                font-color: #eee;
+            }
 
             /* article styling */
             article {
+                padding: 8px;
                 margin-bottom: 10px;
+                background: #efefef;
+                -webkit-border-radius: 8px;
+                -moz-border-radius: 8px;
+                border-radius: 8px;
+            }
+            article:hover {
+                background: #bcbcbc;
+                color: #efefef;
+            }
+            article:active {
+                background: #bcbcbc;
+                color: #fff;
+            }
+            article li.ourUser {
+                font-weight: bolder;
+                font-size: 16px;
+                background: #eeee00;
+            }
+            article>a {
+                display: inline-block;
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+            article>p {
+                margin-bottom: 20px;
+            }
+            article li {
+                margin-bottom: 5px;
             }
 
             /* footer styling */
@@ -270,7 +307,12 @@
                         };
 
                         // request contributors
-                        gn.prototype.requestContributors = function(repo, article) {
+                        gn.prototype.requestContributors = function(repo, article, e) {
+
+                            // prevent links from triggering the event here
+                            if (e.target.nodeName === 'A') {
+                                return false;
+                            }
 
                             // check to see whether we have already loaded contributors
                             var contributors = article.getElementsByTagName('ul');
@@ -323,19 +365,19 @@
                                 // prepare contributor container
                                 var contributor = w.document.createElement('li');
 
-                                // append contributor name /w html link
-                                var name = w.document.createElement('a');
-                                name.appendChild(w.document.createTextNode(contributors[i].login));
-                                name.setAttribute('href', contributors[i].html_url);
-                                contributor.appendChild(name);
-
-                                // append contributions count
-                                var contributions = w.document.createElement('span');
-                                contributions.appendChild(w.document.createTextNode(contributors[i].contributions));
-                                contributor.appendChild(contributions);
+                                // append contributions by user as a sentence /w link to their account
+                                var contribution = w.document.createElement('a');
+                                contribution.appendChild(w.document.createTextNode('There were ' + contributors[i].contributions + ' contributions made by ' + contributors[i].login));
+                                contribution.setAttribute('href', contributors[i].html_url);
+                                contributor.appendChild(contribution);
 
                                 // append contributor to container
                                 container.appendChild(contributor);
+
+                                // make our user bold & highlighted
+                                if (this.username === contributors[i].login) {
+                                    contributor.setAttribute('class', 'ourUser');
+                                }
 
                             }
 
